@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>F11 Davo</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#60a34fa;
+      --green:#16a34a;
+      --red:#ef4444;
+      --gray:#6b7280;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, Arial; margin:16px; background:linear-gradient(180deg,#071129 0%, #041024 100%); color:#e6eef6}
+    .app{max-width:900px;margin:0 auto;padding:18px;background:rgba(255,255,255,0.02);border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    h1{font-size:20px;margin:0}
+    .controls{display:flex;gap:8px;align-items:center}
+    .month-nav button{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+
+    .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;background:transparent;padding:8px}
+    .weekday{font-size:12px;color:var(--muted);text-align:center;padding:6px}
+    .day{
+      min-height:78px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;justify-content:flex-start;cursor:default;transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .day:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(2,6,23,0.6)}
+    .num{font-weight:600;font-size:14px}
+    .muted{font-size:12px;color:var(--muted);margin-top:6px}
+
+    /* statuses */
+    .day.green{border:2px solid rgba(34,197,94,0.4);background:linear-gradient(180deg, rgba(34,197,94,0.25), rgba(34,197,94,0.1));}
+    .day.red{border:2px solid rgba(239,68,68,0.4);background:linear-gradient(180deg, rgba(239,68,68,0.25), rgba(239,68,68,0.1));}
+    .day.gray{border:1px dashed rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(107,114,128,0.03), rgba(107,114,128,0.01));}
+
+    .note{margin-top:14px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);min-height:48px}
+    .note p{margin:0;color:var(--muted)}
+    .note .label{font-weight:700;margin-bottom:6px}
+    .stats{margin-top:14px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.04);font-size:16px;color:var(--muted);line-height:1.6}
+
+    /* Año llamativo pero sin brillo */
+    #yearLabel{
+      font-size:20px;
+      font-weight:900;
+      color:var(--accent);
+      letter-spacing:1px;
+    }
+
+    @media (max-width:640px){.day{min-height:64px;padding:6px}.app{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>F11 Davo</h1>
+      <div class="controls">
+        <div class="month-nav">
+          <button id="prev">◀</button>
+          <button id="today">Hoy</button>
+          <button id="next">▶</button>
+        </div>
+      </div>
+    </header>
+
+    <section id="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-weight:700" id="monthLabel">Mes</div>
+        <div id="yearLabel">Año</div>
+      </div>
+
+      <div class="calendar" id="calendarRoot"></div>
+
+      <div class="note" id="noteArea">
+        <div class="label">Información</div>
+        <p id="noteText"></p>
+      </div>
+      <br>
+
+     <div class="stats" id="statsArea">
+        <strong>Promedios y resultados generales</strong><br>
+        - Promedio de F11 ganados: 66.7%<br>
+        - Promedio de juegos ganados: 77.78%<br>
+        - Juegos ganados en total: 84<br>
+        - Juegos perdidos en total: 24<br>
+        - Promedio de personas que votan a favor (SI): 4.98k<br>
+        - Promedio de personas que votan en contra (NO): 5.13K<br>
+        - Promedio de puntos que votan a favor (SI): 25.55M<br>
+        - Promedio de puntos que votan en contra (NO): 65.70M<br>
+        - Puntos en contra en total: 394.2M<br>
+        - Puntos a favor en total: 153.3M
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const weekdayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const calendarRoot = document.getElementById('calendarRoot');
+    const monthLabel = document.getElementById('monthLabel');
+    const yearLabel = document.getElementById('yearLabel');
+    const noteText = document.getElementById('noteText');
+
+    function renderWeekdays(){
+      for(let i=0;i<7;i++){
+        const el = document.createElement('div'); 
+        el.className='weekday'; 
+        el.textContent=weekdayNames[i]; 
+        calendarRoot.appendChild(el);
+      }
+    }
+
+    let cursor = new Date();
+
+    function startOfMonth(date){return new Date(date.getFullYear(), date.getMonth(), 1)}
+    function daysInMonth(date){return new Date(date.getFullYear(), date.getMonth()+1, 0).getDate()}
+
+    function renderMonth(date){
+      calendarRoot.innerHTML='';
+      renderWeekdays();
+
+      const start = startOfMonth(date);
+      const total = daysInMonth(date);
+      const firstWeekday = start.getDay();
+
+      monthLabel.textContent = date.toLocaleString('es-ES',{month:'long'}).toUpperCase();
+      yearLabel.textContent = date.getFullYear();
+      noteText.innerHTML = '';
+
+      for(let i=0;i<firstWeekday;i++){
+        const blank = document.createElement('div'); 
+        blank.className='day'; 
+        blank.style.opacity='0.05'; 
+        calendarRoot.appendChild(blank);
+      }
+
+      for(let d=1; d<=total; d++){
+        const node = document.createElement('div'); 
+        node.className='day'; 
+        node.dataset.day = d;
+        const num = document.createElement('div'); 
+        num.className='num'; 
+        num.textContent = d; 
+        node.appendChild(num);
+
+        const isSept2025 = (date.getMonth() === 8 && date.getFullYear() === 2025);
+
+        if (d === 11 && isSept2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>11 de septiembre 2025</strong><br><br>SI: 5.7k personas 34.4M puntos 35%<br><br>NO: 4.6k personas 63.1M puntos 65%<br><br> Ganó 13/18';
+          });
+        } else if (d === 14 && isSept2025) {
+          node.classList.add('green');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>14 de septiembre 2025</strong><br><br>SI: 4k personas 22.2M puntos 28%<br><br>NO: 4.2k personas 57.8M puntos 72%<br><br> Ganó 16/18';
+          });
+        } else if (d === 15 && isSept2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>15 de septiembre 2025</strong><br><br>SI: 6.2k personas 25.3M puntos 23%<br><br>NO: 7.3k personas 87.4M puntos 77%<br><br> Ganó 12/18';
+          }); 
+        } else if (d === 17 && isSept2025) {
+          node.classList.add('green');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>17 de septiembre 2025</strong><br><br>SI: 5.1k personas 25.6M puntos 26%<br><br>NO: 5.4k personas 71.9M puntos 74%<br><br> Ganó 14/18';
+          });
+        } else if (d === 18 && isSept2025) {
+          node.classList.add('green');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>18 de septiembre 2025</strong><br><br>SI: 4.7k personas 24.1M puntos 27%<br><br>NO: 5.1k personas 64.1M puntos 73%<br><br> Ganó 15/18';
+          });
+        } else if (d === 19 && isSept2025) {
+          node.classList.add('green');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>19 de septiembre 2025</strong><br><br>SI: 4.2k personas 21.7M puntos 30%<br><br>NO: 4.2k personas 49.9M puntos 70%<br><br> Ganó 14/18';
+          });
+        } else {
+          node.classList.add('gray');
+          node.addEventListener('click', ()=> { noteText.innerHTML = ''; });
+        }
+
+        calendarRoot.appendChild(node);
+      }
+    }
+
+    document.getElementById('prev').addEventListener('click', ()=>{ cursor = new Date(cursor.getFullYear(), cursor.getMonth()-1, 1); renderMonth(cursor); });
+    document.getElementById('next').addEventListener('click', ()=>{ cursor = new Date(cursor.getFullYear(), cursor.getMonth()+1, 1); renderMonth(cursor); });
+    document.getElementById('today').addEventListener('click', ()=>{ cursor = new Date(); renderMonth(cursor); });
+
+    renderMonth(cursor);
+  </script>
+</body>
+</html>
