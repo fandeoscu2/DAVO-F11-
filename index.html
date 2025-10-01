@@ -58,15 +58,18 @@
 <body>
   <div class="app">
     <header>
-      <h1>F11 Davo</h1>
-      <div class="controls">
-        <div class="month-nav">
-          <button id="prev">◀</button>
-          <button id="today">Hoy</button>
-          <button id="next">▶</button>
-        </div>
-      </div>
-    </header>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <h1>F11 Davo</h1>
+  </div>
+
+  <div class="controls">
+    <div class="month-nav">
+      <button id="prev">◀</button>
+      <button id="today">Hoy</button>
+      <button id="next">▶</button>
+    </div>
+  </div>
+</header>
 
     <section id="panel">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -75,6 +78,12 @@
       </div>
 
       <div class="calendar" id="calendarRoot"></div>
+
+<div style="display:flex; align-items:flex-start; gap:16px;">
+  <div style="flex:1;">
+    <div class="calendar" id="calendarRoot"></div>
+  </div>
+</div>
 
       <div class="note" id="noteArea">
         <div class="label">Información</div>
@@ -95,6 +104,12 @@
         - Puntos NO total: <strong>741.1M</strong> (promedio <strong>57.01M</strong>)<br>
       </div>
     </section>
+  </div>
+
+  <div class="stats">
+  📌 Para cambiar los meses apretá la flecha a la izquierda que aparece arriba a la derecha.  
+  Si apretás un día te aparecen las votaciones de ese día y cuántos juegos se ganaron.  
+  Abajo están los promedios y totales de todos los fútbol 11 desde el 11 de septiembre.
   </div>
 
   <script>
