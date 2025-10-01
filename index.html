@@ -12,6 +12,7 @@
       --accent:#60a34fa;
       --green:#16a34a;
       --red:#ef4444;
+      --yellow:#eab308;
       --gray:#6b7280;
       color-scheme: dark;
     }
@@ -36,6 +37,7 @@
     .day.green{border:2px solid rgba(34,197,94,0.4);background:linear-gradient(180deg, rgba(34,197,94,0.25), rgba(34,197,94,0.1));}
     .day.red{border:2px solid rgba(239,68,68,0.4);background:linear-gradient(180deg, rgba(239,68,68,0.25), rgba(239,68,68,0.1));}
     .day.gray{border:1px dashed rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(107,114,128,0.03), rgba(107,114,128,0.01));}
+    .day.yellow{border:2px solid rgba(234,179,8,0.4);background:linear-gradient(180deg, rgba(234,179,8,0.25), rgba(234,179,8,0.1));}
 
     .note{margin-top:14px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);min-height:48px}
     .note p{margin:0;color:var(--muted)}
@@ -81,17 +83,16 @@
       <br>
 
      <div class="stats" id="statsArea">
-        <strong>Promedios y resultados generales</strong><br>
-        - Promedio de F11 ganados: 66.7%<br>
-        - Promedio de juegos ganados: 77.78%<br>
-        - Juegos ganados en total: 84<br>
-        - Juegos perdidos en total: 24<br>
-        - Promedio de personas que votan a favor (SI): 4.98k<br>
-        - Promedio de personas que votan en contra (NO): 5.13K<br>
-        - Promedio de puntos que votan a favor (SI): 25.55M<br>
-        - Promedio de puntos que votan en contra (NO): 65.70M<br>
-        - Puntos en contra en total: 394.2M<br>
-        - Puntos a favor en total: 153.3M
+        <strong>Promedios y resultados generales (hasta 1/10/2025)</strong><br>
+        - F11 jugados: <strong>13</strong><br>
+        - Promedio de F11 ganados: <strong>84.6%</strong> (11/13)<br>
+        - Promedio de juegos ganados: <strong>71.4%</strong><br>
+        - Juegos ganados en total: <strong>167</strong><br>
+        - Juegos perdidos en total: <strong>67</strong><br>
+        - Personas SI total: <strong>65.7K</strong> (promedio <strong>5.05K</strong>)<br>
+        - Personas NO total: <strong>64.3K</strong> (promedio <strong>4.95K</strong>)<br>
+        - Puntos SI total: <strong>338.8M</strong> (promedio <strong>26.06M</strong>)<br>
+        - Puntos NO total: <strong>741.1M</strong> (promedio <strong>57.01M</strong>)<br>
       </div>
     </section>
   </div>
@@ -146,7 +147,9 @@
         node.appendChild(num);
 
         const isSept2025 = (date.getMonth() === 8 && date.getFullYear() === 2025);
+        const isOct2025 = (date.getMonth() === 9 && date.getFullYear() === 2025);
 
+        // Fechas con datos (copiadas y actualizadas)
         if (d === 11 && isSept2025) {
           node.classList.add('red');
           node.addEventListener('click', ()=> {
@@ -155,7 +158,7 @@
         } else if (d === 14 && isSept2025) {
           node.classList.add('green');
           node.addEventListener('click', ()=> {
-            noteText.innerHTML = '<strong>14 de septiembre 2025</strong><br><br>SI: 4k personas 22.2M puntos 28%<br><br>NO: 4.2k personas 57.8M puntos 72%<br><br> Ganó 16/18';
+            noteText.innerHTML = '<strong>14 de septiembre 2025</strong><br><br>SI: 4.0k personas 22.2M puntos 28%<br><br>NO: 4.2k personas 57.8M puntos 72%<br><br> Ganó 16/18';
           });
         } else if (d === 15 && isSept2025) {
           node.classList.add('red');
@@ -176,6 +179,41 @@
           node.classList.add('green');
           node.addEventListener('click', ()=> {
             noteText.innerHTML = '<strong>19 de septiembre 2025</strong><br><br>SI: 4.2k personas 21.7M puntos 30%<br><br>NO: 4.2k personas 49.9M puntos 70%<br><br> Ganó 14/18';
+          });
+        } else if (d === 21 && isSept2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>21 de septiembre 2025</strong><br><br>SI: 5.5k personas 27.6M puntos 32%<br><br>NO: 5.1k personas 57.8M puntos 68%<br><br> Ganó 13/18';
+          });
+        } else if (d === 24 && isSept2025) {
+          node.classList.add('yellow');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>24 de septiembre 2025</strong><br><br>SI: 4.4k personas 24M puntos 32%<br><br>NO: 4.4k personas 50M puntos 68%<br><br> Ganó 13/18';
+          });
+        } else if (d === 25 && isSept2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>25 de septiembre 2025</strong><br><br>SI: 6.6k personas 35.5M puntos 44%<br><br>NO: 4.9k personas 44.7M puntos 56%<br><br> Ganó 12/18';
+          });
+        } else if (d === 26 && isSept2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>26 de septiembre 2025</strong><br><br>SI: 4.7k personas 23.6M puntos 35%<br><br>NO: 4.4k personas 44M puntos 65%<br><br> Ganó 13/18';
+          });
+        } else if (d === 27 && isSept2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>27 de septiembre 2025</strong><br><br>SI: 4.2k personas 22.1M puntos 35%<br><br>NO: 4.1k personas 41.2M puntos 65%<br><br> Ganó 9/18';
+          });
+        } else if (d === 28 && isSept2025) {
+          node.classList.add('green');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>28 de septiembre 2025</strong><br><br>SI: 5.2k personas 23.2M puntos 30%<br><br>NO: 5.5k personas 54.8M puntos 70%<br><br> Ganó 14/18';
+          });
+        } else if (d === 1 && isOct2025) {
+          node.classList.add('red');
+          node.addEventListener('click', ()=> {
+            noteText.innerHTML = '<strong>1 de octubre 2025</strong><br><br>SI: 5.2k personas 29.5M puntos 35%<br><br>NO: 5.1k personas 54.4M puntos 65%<br><br> Ganó 9/18';
           });
         } else {
           node.classList.add('gray');
